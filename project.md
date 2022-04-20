@@ -19,56 +19,59 @@ https://querybuilder.js.org/
 
 ----
 ## Entry
-class Entry:
-	* table:table_name excluding granularity
-	* field: field_name
-	* op: <in>/<not in>/<equals>/<greater>/</less>/<greater than equal to>/<less than equal to>
-	* value: value
-	* group_by: account/ad
-	* granularity: daily/weekly/monthly
 
-	* fetch: function to return rows, create cache entry
-	* Notes:
-		* Returns a list of rows
-		* Each fetch creates a cached entry, with a reference made by <table>.<granularity>.<field>.<op>.<value>.<group_by>
+class Entry:  
+	* table:table_name excluding granularity  
+	* field: field_name  
+	* op: in/not in/equals/greater/less/greater than equal to/less than equal to  
+	* value: value  
+	* group_by: account/ad  
+	* granularity: daily/weekly/monthly  
+	* fetch: function to return rows, create cache entry  
+
+Notes:  
+	* Returns a list of rows  
+	* Each fetch creates a cached entry, with a reference made by table.granularity.field.op.value.group_by  
 
 ## Group
-class Group:
-	* name: a unique name for the group if any, else randomly generated
-	* op: AND/OR/None/ADD/SUB/DIV/MUL
-	* group_by: account/ad, this will get passed to entry
-	* granularity: daily/weekly/monthly, get passed to entry
-	* entries: list of Entry
-	* groups: list of subgroups
-	* fetch: function to return rows, create cache entry
-	* eval_field: single field to use in calculation
-	* eval_function: function SUM/SUB/AVG etc.
 
-	* notes:
-		* The 'op' is applied to output of each entry and of each subgroup
-		* Each fetch creates a cached entry, with a reference made by to each subgroup, events, op, granulariry, eval_func, eval_field
+class Group:  
+	* name: a unique name for the group if any, else randomly generated  
+	* op: AND/OR/None/ADD/SUB/DIV/MUL  
+	* group_by: account/ad, this will get passed to entry  
+	* granularity: daily/weekly/monthly, get passed to entry  
+	* entries: list of Entry  
+	* groups: list of subgroups  
+	* fetch: function to return rows, create cache entry  
+	* eval_field: single field to use in calculation  
+	* eval_function: function SUM/SUB/AVG etc.  
+
+Notes:
+	* The 'op' is applied to output of each entry and of each subgroup  
+	* Each fetch creates a cached entry, with a reference made by to each subgroup, events, op, granulariry, eval_func, eval_field  
 
 ## Query
-class Query:
-	* name: query name
-	* type: event/query
-	* event_eval 
-	* group: the initial group
-	* group_by: account/ad, this will get passed to group
-	* granularity: daily/weekly/monthly, get passed to group
 
-## Notes:
-	* Each Event is independent, so can eaily do async/wait
-	* Each Event creates a unique reference, that can be checked in cache and waited on
-	* Indexes for 	
-		* event_group
-		* event_subgroup
+class Query:  
+	* name: query name  
+	* type: event/query  
+	* event_eval   
+	* group: the initial group  
+	* group_by: account/ad, this will get passed to group  
+	* granularity: daily/weekly/monthly, get passed to group  
+
+## Notes:  
+	* Each Event is independent, so can eaily do async/wait  
+	* Each Event creates a unique reference, that can be checked in cache and waited on  
+	* Indexes for 	  
+		* event_group  
+		* event_subgroup  
 ---
 ## Examples
 
-### Facebook Ad Clicks
- FacebookAdData_ * Sum(clicks)
- 	Query:
+### Facebook Ad Clicks  
+	FacebookAdData_ * Sum(clicks)  
+	Query:  
 		name: Facebood Ad Clicks
 		group:
 			Group:
